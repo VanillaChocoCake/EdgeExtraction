@@ -1,20 +1,23 @@
-clc;% sunpeihan@mail.ustc.edu.cn
+% sunpeihan@mail.ustc.edu.cn
+clc;
 clear;
 close all;
-img = imread("Label/Label2.JPG");
+img = imread("images/sakura.png");
+img = rgb2gray(img);
+img = imresize(img, 2);
 img = imgaussfilt(img, 3);
 % 高斯滤波
-J = 8;
+J = 7;
 % 尺度
 [a, h, v, d] = haart2(img, J);
-transformed = uint8(normalization(h{1}+v{1}+d{1}));
-imwrite(transformed, "transformed.png");
+% transformed = uint8(normalization(h{1}+v{1}+d{1}));
+% imwrite(transformed, "transformed.png");
 % Haar小波变换
 Mod = {};
 % 模
 Af = {};
 % 幅角
-Threshold = 4.5;
+Threshold = 10;
 % 灰度阈值
 
 for k = 1:J
@@ -200,12 +203,13 @@ end
 res = uint8(normalization(last_layer));
 figure;
 imshow(res);
-imwrite(res, "res.png");
+imwrite(res, "edges/sakura/sakura_wt.png");
              
 function res = normalization(img)
     max_value = max(max(img));
     min_value = min(min(img));
     res = img;
-    res = 255 * (res - min_value) / (max_value - min_value);
+    res = 255 * (res - min_value) ./ (max_value - min_value);
+    res(res > 0) = 255;
 end
 % 图像归一化
